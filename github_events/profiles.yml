@@ -1,0 +1,11 @@
+github_events:
+  outputs:
+    dev:
+      catalog: github_events
+      host: "{{ env_var('DBT_HOST') }}"
+      http_path: "{{ env_var('DBT_HTTP_PATH') }}"
+      schema: analytics
+      threads: 4
+      token: "{{ env_var('DBT_TOKEN') }}"
+      type: databricks
+  target: dev

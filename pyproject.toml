@@ -1,0 +1,14 @@
+[project]
+name = "dbt-github-events"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "databricks-sdk>=0.47.0",
+    "dbt-core>=1.12.5",
+    "dbt-databricks>=1.10.9",
+    "pyspark>=4.2.0",
+    "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
+]
