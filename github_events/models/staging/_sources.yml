@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+    - name: github_events
+      database: github_events
+      schema: raw
+      tables:
+        - name: raw_events
+          description: "Auto Loader output - one row per line of each landed .json.gz file, JSON untouched. Ingestion output, not dbt-managed"
