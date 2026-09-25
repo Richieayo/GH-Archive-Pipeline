@@ -24,6 +24,15 @@ parsed as (
 Select
     event.id                       as event_id,
     event.type                     as event_type,
+    case
+        when event.type in (
+            'CommitCommentEvent', 'CreateEvent', 'DeleteEvent', 'DiscussionEvent',
+            'ForkEvent', 'GollumEvent', 'IssueCommentEvent', 'IssuesEvent',
+            'MemberEvent', 'PublicEvent', 'PullRequestEvent', 'PullRequestReviewEvent',
+            'PullRequestReviewCommentEvent', 'PushEvent', 'ReleaseEvent', 'WatchEvent'
+        ) then event.type
+        else 'Unrecognized'
+    end as event_type_label,
     event.repo.id                  as repo_id,
     event.repo.name                as repo_name,
     event.org.login                as org_login,

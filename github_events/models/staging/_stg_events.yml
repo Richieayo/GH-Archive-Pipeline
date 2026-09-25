@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: stg_events
+    description: >
+      Thin 1:1 typed extraction over raw_events. One row per raw event,
+      duplicates included. No dedup — that lives in int_events_deduped.
+    columns:
+      - name: event_id
+        description: GitHub's event id. String, as GH Archive serialises it.
+        data_tests:
+          - not_null
+
+      - name: repo_id
+        data_tests:
+          - not_null:
+                config:
+                    severity: warn
+
+      - name: event_type
+        description: Raw event type as sent by GitHub.
+        data_tests:
+          - not_null
+          - accepted_values:
+              severity: warn
+              values:
+                - CommitCommentEvent
+                - CreateEvent
+                - DeleteEvent
+                - DiscussionEvent
+                - ForkEvent
+                - GollumEvent
+                - IssueCommentEvent
+                - IssuesEvent
+                - MemberEvent
+                - PublicEvent
+                - PullRequestEvent
+                - PullRequestReviewEvent
+                - PullRequestReviewCommentEvent
+                - PushEvent
+                - ReleaseEvent
+                - WatchEvent
+
+      - name: created_at
+        data_tests:
+          - not_null
+
+      - name: event_hour
+        data_tests:
+          - not_null
+
+      - name: org_login
+        description: >
+          NULL for personal-account repos — GitHub only sends `org` when the
+          repo is org-owned. Deliberately untested.

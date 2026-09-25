@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: int_events_deduped
+    description: >
+      One row per unique GitHub event id. Events with a null repo_id are excluded.
+    columns:
+      - name: event_id
+        data_tests:
+          - unique
+          - not_null
+      - name: repo_id
+        data_tests:
+          - not_null
+      - name: event_type
+        data_tests:
+          - not_null
+      - name: created_at
+        data_tests:
+          - not_null
