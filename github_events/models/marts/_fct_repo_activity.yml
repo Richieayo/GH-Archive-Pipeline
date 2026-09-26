@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: fct_repo_activity
+    description: >
+      One row per repo per hour. Event counts by type, built on deduped events.
+      Incremental with a lookback window; merged on (repo_id, event_hour).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [repo_id, event_hour]
+    columns:
+      - name: repo_id
+        data_tests: [not_null]
+      - name: event_hour
+        data_tests: [not_null]
+      - name: owner_type
+        data_tests:
+          - accepted_values:
+              values: ['organization', 'personal']
+      - name: total_events
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 1

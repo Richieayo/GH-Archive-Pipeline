@@ -5,7 +5,7 @@ CHECKPOINT = "/Volumes/github_events/raw/checkpoints/raw_events"
 TARGET     = "github_events.raw.raw_events"
 
 raw = (
-    spark.readStream
+    spark.readStream # type: ignore
     .format("cloudFiles")
     .option("cloudFiles.format", "text")
     .load(LANDING)
