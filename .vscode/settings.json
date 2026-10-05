@@ -1,0 +1,5 @@
+{
+    // Only detect the main dbt project; airflow_github_events/github_events is a
+    // copy for the Airflow container and shares the same project name.
+    "dbt.allowListFolders": ["github_events"]
+}

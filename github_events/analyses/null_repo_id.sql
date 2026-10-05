@@ -1,7 +1,8 @@
 Select *
 from {{ ref("stg_events")}}
---where event_type = 'ForkEvent'
--- repo_id IS NULL
+where repo_id IS NULL
+-- event_type = 'ForkEvent'
+
 
 
 --select raw_event
