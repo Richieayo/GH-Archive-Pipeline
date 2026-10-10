@@ -116,7 +116,7 @@ with left:
         order by events desc
         limit 25
     """)
-    st.dataframe(owners, use_container_width=True, hide_index=True)
+    st.dataframe(owners, width="stretch", hide_index=True)
 
 
 with right:
@@ -132,7 +132,7 @@ with right:
         order by events desc
         limit 25
     """)
-    st.dataframe(repos, use_container_width=True, hide_index=True)
+    st.dataframe(repos, width="stretch", hide_index=True)
 
 
 
@@ -142,7 +142,7 @@ with st.expander("Pipeline health"):
         select event_hour,
                sum(total_events)        as events,
                count(distinct repo_id)  as repos,
-               sum(unrecognized_events) as unrecognized
+               sum(unrecognized_events) as unrecognized_events
         from {ANALYTICS}.fct_repo_activity
         where {window}
         group by event_hour
@@ -153,5 +153,5 @@ with st.expander("Pipeline health"):
         "Non-zero unrecognized means GitHub has shipped an event type that is not in "
         "the accepted_values list."
     )
-    st.dataframe(health, use_container_width=True, hide_index=True)
+    st.dataframe(health, width="stretch", hide_index=True)
     st.caption(f"Rendered {datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC")
