@@ -4,44 +4,7 @@ An hourly, near-real-time pipeline that pulls public GitHub activity from [GH Ar
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph EXT["External"]
-        GHA[("GH Archive<br/>data.gharchive.org<br/>hourly .json.gz")]
-    end
-
-    subgraph AF["Airflow (Docker) — DAG github_events_hourly, runs at :15 every hour"]
-        direction TB
-        T1["fetch_gharchive<br/><i>BashOperator</i>"]
-        T2["autoloader_to_raw_events<br/><i>PythonOperator → jobs.run_now</i>"]
-        T3["dbt_deps"]
-        T4["dbt_source_freshness<br/><i>non-blocking</i>"]
-        T5["dbt_build<br/><i>run + test</i>"]
-        T1 --> T2 --> T3 --> T4 --> T5
-    end
-
-    subgraph DBX["Databricks — catalog github_events"]
-        direction TB
-        VOL[["/Volumes/github_events/raw/landing"]]
-        JOB["Databricks Job<br/>notebook: land_raw_events"]
-        CKP[["/Volumes/github_events/raw/checkpoints/raw_events"]]
-        RAW[("raw.raw_events<br/>Delta, partitioned by event_hour")]
-        STG["analytics.stg_events<br/>view"]
-        INT["analytics.int_events_deduped<br/>view"]
-        FCT[("analytics.fct_repo_activity<br/>incremental merge")]
-        VOL --> JOB
-        JOB -.->|tracks processed files| CKP
-        JOB --> RAW --> STG --> INT --> FCT
-    end
-
-    DASH["Streamlit dashboard<br/>dashboard/app.py"]
-
-    GHA -->|HTTP download| T1
-    T1 -->|Files API upload| VOL
-    T2 -->|triggers| JOB
-    T5 -->|SQL warehouse| STG
-    FCT --> DASH
-```
+![Pipeline architecture: Airflow orchestrates ingest (GH Archive → fetch script → UC volume), land (Auto Loader → raw_events), transform (dbt: stg_events → int_events_deduped → fct_repo_activity) and serve (dashboard)](docs/images/architecture.png)
 
 ## How it works
 
